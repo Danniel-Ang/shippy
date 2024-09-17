@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-j!3-jzqpwvntx-aefvo$w%3c4peu$z5142dbjy=!$q=ugd)w0n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "danniel-shippy.pbp.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "danniel-shippy.pbp.cs.ui.ac.id"] 
 
 # Application definition
 
@@ -54,7 +54,7 @@ ROOT_URLCONF = 'shippy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
