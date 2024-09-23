@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex justify-center mt-20">
+    <div class="bg-white p-8 rounded shadow-md w-1/3 h-120">
+      <h1 class="text-3xl font-bold mb-4 text-center">Login</h1>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 font-medium">Username</label>
+                <input type="text" name="username" id="username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700 font-medium">Password</label>
+                <input type="password" name="password" id="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="form-checkbox text-blue-500">
+                        <span class="ml-2 text-gray-600">Remember me</span>
+                    </label>
+                </div>
+                <a href="#" class="text-blue-500 hover:underline">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">Login</button>
+        </form>
+        
+        <p class="text-center text-gray-600 mt-6">Don't have an account? <a href="{% url 'main:register' %}" class="text-blue-500 hover:underline">Sign up</a></p>
+    </div>
+</div>
+{% endblock %}

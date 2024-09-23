@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
+{% block nav %}
+    <a href="{% url 'main:logout' %}" class="px-4 py-2 hover:bg-red-500 rounded">Logout</a>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-4xl mx-auto p-6">
-    <h2 class="text-3xl font-semibold mb-6">Featured Products</h2>
+    <h2 class="text-3xl font-semibold mb-6">Hello {{username}}!<h2>
     {% if products %}
     <ul class="space-y-4 mb-8">
         {% for product in products %}
