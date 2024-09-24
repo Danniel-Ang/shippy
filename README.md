@@ -1,6 +1,7 @@
 # Shippy
 Ecommerce Shippy, giving you an experience to throw away your money.
-
+<details open>
+<summary> Tugas 2 </summary>
 ## Tugas 2
 #### 1. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
 - Membuat github repo shippy dan melakukan clone ke dalam local directory saya
@@ -28,6 +29,8 @@ Ditambah dengan bahasa pemrograman yang digunakan adalah Python, yang juga dipak
 #### 5. Mengapa model pada Django disebut sebagai ORM?
 
 Model pada Django disebut sebagai ORM (Object-Relational Mapping) karena memungkinkan pemetaan objek Python langsung ke tabel database, sehingga kita bisa mengelola database tanpa menulis query SQL manual. ORM memudahkan pengembang untuk melakukan operasi seperti membuat, membaca, memperbarui, dan menghapus data (CRUD) langsung dengan kode Python. Django juga otomatis menangani relasi antar-tabel, sehingga pengelolaan database lebih efisien dan terstruktur.
+
+</details>
 
 
 ## Tugas 3
