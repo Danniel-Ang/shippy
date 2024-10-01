@@ -70,6 +70,22 @@ def user_logout(request):
     response.delete_cookie('last_login')
     return response
 
+def edit_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+    product.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
 
 def show_xml_by_id(request, id):
     data = ProductEntry.objects.filter(pk=id)

@@ -1,38 +1,36 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block nav %}
-    <a href="{% url 'main:logout' %}" class="px-4 py-2 hover:bg-red-500 rounded">Logout</a>
-{% endblock %}
+{% block meta %}
+<title>Shippy E-Commerce - Dashboard</title>
+{% endblock meta %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto p-6">
-    <h2 class="text-3xl font-semibold mb-6">Hello {{username}}!<h2>
+{% include 'navbar.html' %}
+<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-gray-100 flex flex-col">
+  <div class="p-2 mb-6 relative max-w-7xl mx-auto">
+    
     {% if products %}
-    <ul class="space-y-4 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for product in products %}
-        <li class="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-            <div class="mb-4">
-                <span class="text-xl font-semibold">{{ product.name }}</span>
-            </div>
-            <div class="mb-4 text-gray-700">
-                <span class="text-lg">{{ product.price|floatformat:2 }} Rupiah</span>
-            </div>
-            <div class="text-gray-600">
-                <p>{{ product.description }}</p>
-            </div>
-        </li>
+          {% include 'card_product.html' with product=product %}
         {% endfor %}
-    </ul>
+      </div>
     {% else %}
-    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+      <div class="bg-white shadow-lg rounded-lg p-6 text-center w-full flex flex-col items-center justify-center h-full">
+        <img src="{% static 'image/Sad.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
         <p class="text-xl font-medium text-gray-700">No products available.</p>
-        <p class="text-gray-500 mt-2">It looks like there are no products in our store right now. Please check back later!</p>
-    </div>
+        <p class="text-gray-500 mt-2">Please check back later!</p>
+      </div>
     {% endif %}
+  </div>
 
-    <a href="{% url 'main:create_product_entry' %}" 
-       class="bg-blue-500 text-white px-8 py-4 rounded-lg shadow-md hover:bg-blue-600 transition duration-300 block mx-auto">
-       Add Product
+  <div class="flex justify-end mt-6 max-w-7xl mx-auto">
+    <a href="{% url 'main:create_product_entry' %}" class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 shadow-lg">
+      Add Product
     </a>
+  </div>
 </div>
-{% endblock %}
+
+
+{% endblock content %}

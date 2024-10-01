@@ -32,7 +32,8 @@ Model pada Django disebut sebagai ORM (Object-Relational Mapping) karena memungk
 
 </details>
 
-
+<details open>
+<summary> Tugas 3 </summary>
 ## Tugas 3
 #### 1. Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
 
@@ -49,6 +50,12 @@ Method is_valid() pada form Django berfungsi untuk memastikan bahwa data yang di
 #### 4. Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
 
 CSRF token berfungsi untuk melindungi dari serangan CSRF (Cross-Site Request Forgery), di mana penyerang memanfaatkan autentikasi pengguna untuk melakukan tindakan berbahaya. Serangan ini dimulai ketika pengguna login ke suatu situs web dan informasi autentikasi disimpan dalam cookie. Penyerang kemudian mengirimkan link berbahaya melalui email atau chat. Jika pengguna mengklik link tersebut tanpa adanya proteksi CSRF, penyerang dapat melakukan tindakan yang merugikan karena pengguna sudah terautentikasi oleh cookie. Namun, dengan adanya CSRF token, server akan memverifikasi token yang dikirim bersama permintaan. Jika tidak ada CSRF token atau tokennya tidak valid, server akan menolak permintaan tersebut dengan memberikan error 403, sehingga serangan dapat dicegah.
+</details>
+
+
+
+<details open>
+<summary> Tugas 4 </summary>
 #### 1. Apa perbedaan antara HttpResponseRedirect() dan redirect()
 
 HttpResponseRedirect merupakan subclass dari HttpResponse yang digunakan untuk melakukan redirect ke URL lain. Ketika suatu fungsi dalam views mengembalikan HttpResponseRedirect, Django akan merespons dengan kode status seperti 302 (Found, jika URL valid), yang merupakan pengalihan sementara, serta menambahkan header Location yang berisi URL tujuan yang akan dikunjungi oleh client setelah melakukan request.
@@ -205,3 +212,212 @@ def make_entry_product(request):
     context = {'form': form}
     return render(request, "create_product_entry.html", context)
 ```
+</details>
+
+
+<details open>
+<summary> Tugas 5 </summary>
+
+#### 1. Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+
+Prioritas pengambilan CSS selector ditentukan oleh spesialisasi nya. Semakin spesifik elemen yang dirujuk selector, maka selector tersebutlah yang akan melakukan styling. Namun secara umum, hieraki spesialisasi selector pada CSS adalah sebagai berikut (Tertinggi ke terendah):
+- Inline Styles
+- IDs
+- Classes, pseudo-classes, attribute selectors
+- Elements and pseudo-elements
+
+Adapun perhitungan yang lebih spesifik dengan mengetahui nilai specify masing masing jenis selector
+- Inline Styles: 1000 (Selalu di prioritaskan jika ada)
+- Each ID value: 100 (Tiap ID yang ada pada selector akan ditambahkan 100)
+- Each Class/Pseudo-class/attribute-selector value: 10 (Tiap Class yang ada pada selector akan ditambahkan 10)
+- Each elements and pseudo elements: 1 (Tiap element yang disebutkan dalam selector akan ditambahakan 1)
+
+Berikut contohnya:
+- p.test1.test2 (Terdapat 1 element yaitu p dan 2 class yaitu (test1, test2) sehingga total scorenya adalah 1 + 10 + 10 = 21)
+- #navbar p#demo (Terdapat 1 element yaitu p dan 2 ID yaitu (navbar, demo) sehingga total scorenya adalah 1 + 100 + 100 = 201)
+dst.
+
+#### 2. Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design!
+
+Responsive design sangat penting karena pemakaian aplikasi biasanya tidak dipakai oleh satu jenis perangkat saja (Misal: Desktop, HP, Tablet dll). Oleh karena itu responsive design diperlukan agar user dapat mendapatkan tampilan yang bagus dan jelas dengan menggunakan perangkat apapun itu. Selain itu, responsive design juga meningkatkan pengalaman pengguna (user experience), mengurangi kebutuhan pengembangan versi aplikasi yang terpisah untuk setiap jenis perangkat, serta membantu dalam optimasi SEO (Search Engine Optimization) karena Google memberikan prioritas kepada website yang mobile-friendly.
+
+Contoh website yang sudah menggunakan responsive design yaitu YouTube, Twitter, Instagram dan lain lain.
+
+Contoh website yang belum menggunakan responsive design yaitu Website Blogspot (Di ukuran tertentu, page tidak bisa nampak dalam satu layar)
+
+#### 3. Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+
+- Margin adalah area di luar border suatu elemen yang berfungsi untuk mengatur jarak antara elemen tersebut dengan elemen lain di sekitarnya.
+- Border adalah garis yang mengelilingi elemen, menandakan sisi terluar dari elemen tersebut.
+- Padding adalah area di antara konten elemen dan border, yang berfungsi untuk mengatur jarak antara konten dengan border elemen.
+
+![alt text](image.png)
+- Area berwarna biru adalah content, area berwarna hijau adalah padding, diikuti dengan border dan margin.
+
+Sebagai contoh:
+```HTML
+    <div class="m-20 border-2 border-black p-10">
+        <a href="#">Sussy Button</a>
+    </div>
+```
+Dalam tailwind css, kita dapat mengimplementasi padding dengan p-, border dengan border- dan margin dengan m-
+Disini, unit nya menggunakan rem jadi m-20 adalah margin yang menggunakan ukuran 20 rem => 20 pixel dst
+
+Jika menggunakan external styling:
+
+```HTML
+    <div class="box">
+        <a href="#">Sussy Button</a>
+    </div>
+```
+
+```CSS
+.box {
+    margin: 20px; /* Jarak elemen ini dari elemen lain */
+    border: 2px solid black; /* Border dengan ketebalan 2px dan warna hitam */
+    padding: 10px; /* Jarak antara konten (link) dan border elemen */
+}
+```
+
+#### 4. Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+Flexbox (Flexible Box Layout) adalah sebuah layout 1D (satu dimensi) yang digunakan untuk mengatur elemen-elemen dalam satu baris atau satu kolom. Flexbox berguna ketika kita ingin mengatur elemen-elemen secara fleksibel, baik secara horizontal (x-axis) atau vertikal (y-axis). Flexbox sangat cocok digunakan untuk tata letak yang memerlukan penyesuaian proporsional ketika kontainer berubah ukurannya, misalnya untuk mengatur distribusi ruang di antara elemen, centering, atau pengaturan elemen yang berubah-ubah ukurannya. Namun, Flexbox terbatas pada satu arah saja, baik secara horizontal atau vertikal.
+
+Grid Layout adalah layout 2D (dua dimensi) yang menyerupai tabel, di mana kita bisa mengatur elemen berdasarkan baris dan kolom. Grid sangat fleksibel karena memungkinkan untuk membuat layout yang kompleks dengan mendefinisikan baris dan kolom secara eksplisit. Dengan Grid, kita bisa mengatur elemen baik secara horizontal (x-axis) maupun vertikal (y-axis) secara bersamaan, memungkinkan pengaturan yang lebih kompleks dan presisi dibandingkan Flexbox.
+
+Berikut contoh penggunaan masing-masing pada code saya:
+
+- Flex Box
+```HTML
+<div class="flex justify-between items-center">
+  <button class="bg-blue-500 text-white p-4">Button 1</button>
+  <button class="bg-green-500 text-white p-4">Button 2</button>
+</div>
+```
+Flexbox digunakan untuk membuat dua tombol yang diposisikan secara horizontal dengan jarak antar tombol yang merata, berkat justify-between. Selain itu, kedua tombol juga diratakan secara vertikal di tengah container berkat items-center.
+
+- Grid
+```HTML
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for product in products %}
+        {% include 'card_product.html' with product=product %}
+    {% endfor %}
+</div>
+```
+Grid Layout digunakan untuk menampilkan produk dalam grid. Pada ukuran layar kecil (mobile), produk akan tampil dalam 1 kolom. Ketika layar lebih besar (ukuran medium), grid berubah menjadi 2 kolom. Pada layar besar (desktop), grid berubah menjadi 3 kolom.
+
+#### 5.Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+
+- Pertama saya melakukan pembuatan function di views.py dan menghubungkan nya di urls.py. Hal ini saya lakukan agar mempermudah saya dalam mengimplementasikan page html nya. Saya membuat edit_product dan delete_product function dan menambahkannya di urls.py
+
+```python
+def edit_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+    product.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
+```
+
+- Selanjutnya saya memulai melakukan design pada page yang sudah ada sebelumnya yaitu login, register dan add product. Untuk mencapai design yang responsif saya menggunakan flex box karena masing-masing dari page tersebut hanya memiliki 1 box untuk mengisi form. Kemudian untuk mengatur style ketika di focus, saya membuat file global.css yang akan memberikan gaya focus yang sama untuk semua form. Berikut styling pada static\css\global.css 
+
+```css
+.form-style form input, form textarea, form select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #bcbcbc;
+    border-radius: 0.375rem;
+}
+
+.form-style form input:focus, form textarea:focus, form select:focus {
+    outline: none;
+    border-color: #2563eb; /* Use a blue shade for focus */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4); /* Slight blue shadow */
+}
+```
+
+Penggunaan flex box (Tailwind):
+```HTML
+<div class="flex justify-center items-center min-h-screen px-4 py-10">
+```
+flex : Untuk membuat flex row
+justify-center : Mengatur tiap item untuk berada pada posisi tengah (Horizontal)
+items-center :  Mengatur tiap item untuk berada pada posisi tengah (Vertical)
+min-h-screen : Kontainer memenuhi seluruh screen nya
+
+- Melakukan design pada halaman daftar produk. Disini saya menggunakan flex box dan grid layout untuk menyusun produk-produknya. Grid saya pakai dengan cara:
+```HTML
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for product in products %}
+        {% include 'card_product.html' with product=product %}
+    {% endfor %}
+</div>
+```
+Grid Layout digunakan untuk menampilkan produk dalam grid. Pada ukuran layar kecil (mobile), produk akan tampil dalam 1 kolom. Ketika layar lebih besar (ukuran medium), grid berubah menjadi 2 kolom. Pada layar besar (desktop), grid berubah menjadi 3 kolom.
+
+Untuk flex box ada saya pakai pada kontainer terluar dan masing masing card product. Saya juga menambahkan image yang diambil dari static/css/image untuk menunjukkan apabila produk kosong. 
+
+Kemudian saya mengimplementasikan maisng-masing card-product dan menambahkan icon yang diperlukan untuk melakukan edit dan delete
+```HTML
+<div class="relative break-inside-avoid w-72"> 
+    <!-- Tampilan masing-masing produk -->
+    <div class="bg-blue-50 shadow-lg rounded-lg mb-6 flex flex-col border-2 border-blue-300 transition-transform duration-300 transform hover:scale-105">
+        <div class="bg-blue-200 text-gray-800 p-4 rounded-t-lg border-b-2 border-blue-300">
+            <h3 class="font-bold text-xl mb-1 overflow-hidden text-ellipsis whitespace-nowrap" title="{{ product.name }}">{{ product.name }}</h3>
+            <p class="text-gray-600">{{ product.price|floatformat:2 }} Rupiah</p>
+        </div>
+        <div class="p-4 flex-grow">
+            <p class="font-semibold text-lg mb-2">Description</p>
+            <p class="text-gray-700 mb-2 h-16 overflow-hidden overflow-ellipsis" title="{{ product.description }}">{{ product.description }}</p>
+        </div>
+    </div>
+
+    <!-- Icon edit dan delete -->
+    <div class="absolute bottom-4 right-4 flex space-x-2">
+        <a href="{% url 'main:edit_product' product.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+            </svg>
+        </a>
+        <a href="{% url 'main:delete_product' product.pk %}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+        </a>
+    </div>
+</div>
+```
+
+- Kemudian yang terakhir saya membuat navigation bar dengan memisahkan nya menjadi file tertentu agar lebih mudah diurus. Ada 2 kasus dalam navigation bar, kasus ketika menggunakan desktop dan mobile (responsive design). 
+
+```HTML
+<div class="hidden md:flex items-center">
+```
+Jika size nya medium atau keatas maka akan menjadi flex container
+
+```HTML
+<div class="mobile-menu hidden md:hidden px-4 w-full">
+```
+Jika sizenya small maka akan ditampilkan sesuai atribut tersebut dimana mobile-menu untuk membuatnya bisa di expand
+
+Kemudian memperhias masing masing nya dan menambahkan listener pada mobile-menu tadi
+```HTML
+<script>
+  const btn = document.querySelector("button.mobile-menu-button");
+  const menu = document.querySelector(".mobile-menu");
+
+  btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+  });
+</script>
+```
+
+</details>

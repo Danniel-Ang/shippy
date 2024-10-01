@@ -4,6 +4,8 @@ from main.views import *
 app_name = 'main'
 urlpatterns = [
     path('', show_main, name='show_main'),
+    path('edit_product/<uuid:id>', edit_product, name='edit_product'),
+    path('delete_product/<uuid:id>', delete_product, name='delete_product'),
     path('login/', user_login, name='login'),
     path('register/', user_register, name='register'),
     path('logout/', user_logout, name='logout'), 
