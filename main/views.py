@@ -13,30 +13,19 @@ import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.utils.html import strip_tags
 
 @login_required(login_url='main:login')
 def show_main(request):
-    product_entry = ProductEntry.objects.all()
     context = {
         'username' : request.user,
-        'products' : product_entry,
         'last_login': request.COOKIES['last_login'] if "last_login" in request.COOKIES else None,
     }
     return render(request, "main.html", context)
 
-def make_entry_product(request):
-    form = ProductForm(request.POST or None)
-
-    if form.is_valid() and request.method == "POST":
-        product_entry = form.save(commit=False)
-        product_entry.user = request.user
-        product_entry.save()
-        form.save()
-        return redirect('main:show_main')
-
-    context = {'form': form}
-    return render(request, "create_product_entry.html", context)
-
+# User Authentication
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -46,6 +35,8 @@ def user_login(request):
             response = HttpResponseRedirect(reverse("main:show_main"))
             response.set_cookie('last_login', str(datetime.datetime.now()))
             return response
+        else:
+            messages.error(request, "Invalid username or password. Please try again.")
     else:
         form = AuthenticationForm(request)
     context = {'form': form}
@@ -70,6 +61,37 @@ def user_logout(request):
     response.delete_cookie('last_login')
     return response
 
+# CRUD product
+@csrf_exempt
+@require_POST
+def add_product_entry_ajax(request):
+    name = strip_tags(request.POST.get("name"))
+    price = request.POST.get("price")
+    description = strip_tags(request.POST.get("description"))
+    user = request.user
+
+    new_product = ProductEntry(
+        name = name,
+        price = price,
+        description = description,
+        user = user
+    )
+    new_product.save()
+    return HttpResponse(b"CREATED", status=201)
+
+def add_product_entry(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        product_entry = form.save(commit=False)
+        product_entry.user = request.user
+        product_entry.save()
+        form.save()
+        return redirect('main:show_main')
+
+    context = {'form': form}
+    return render(request, "create_product_entry.html", context)
+
 def edit_product(request, id):
     product = ProductEntry.objects.get(pk = id)
 
@@ -87,6 +109,8 @@ def delete_product(request, id):
     product.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
 
+
+# XML and JSON
 def show_xml_by_id(request, id):
     data = ProductEntry.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
@@ -96,9 +120,9 @@ def show_json_by_id(request, id):
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_json(request):
-    data = ProductEntry.objects.all()
+    data = ProductEntry.objects.filter(user = request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_xml(request):
-    data = ProductEntry.objects.all()
+    data = ProductEntry.objects.filter(user = request.user)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")

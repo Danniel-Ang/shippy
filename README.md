@@ -421,3 +421,120 @@ Kemudian memperhias masing masing nya dan menambahkan listener pada mobile-menu 
 ```
 
 </details>
+
+<details open>
+<summary> Tugas 6 </summary>
+
+#### 1. Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+Dalam pengembangan aplikasi web, JavaScript memberikan efek dinamis yang signifikan pada tampilan website, memungkinkan interaktivitas yang lebih baik bagi pengguna. Dengan JavaScript, pengembang dapat menambahkan logika ke dalam website, sehingga pengguna dapat berinteraksi langsung melalui elemen-elemen seperti formulir, tombol, dan konten yang dapat diperbarui secara real-time. Jika hanya menggunakan HTML dan CSS, website yang dihasilkan akan statis dan tidak dapat merespons aksi pengguna. Selain itu, JavaScript juga memungkinkan manipulasi DOM, validasi input, dan integrasi dengan API, sehingga meningkatkan fungsionalitas dan pengalaman pengguna secara keseluruhan.
+
+#### 2. Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+
+Penggunaan await saat menggunakan fetch() adalah untuk menunggu hingga operasi ansinkronus selesai (seperti permintaan data dari server) sebelum melanjutkan eksekusi kode berikutnya. Karena fetch() mengembalikan promise, await akan membuat kita menunggu sampai Promise tersebut terselesaikan dan langsung mendapatkan hasilnya (respons data).
+
+Saat await digunakan, eksekusi kode akan berhenti sementara hingga Promise dari fetch() selesai, baik ketika berhasil (resolved) atau gagal (rejected). Ini membuat kode lebih sederhana dan mudah dipahami.
+
+Namun, jika await tidak digunakan, eksekusi kode berikutnya akan berjalan tanpa menunggu Promise selesai, yang dapat menghasilkan keluaran yang tidak diharapkan atau kesalahan karena data belum tersedia saat diperlukan.
+
+#### 3. Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?
+Kita perlu menggunakan decorator @csrf_exempt pada view yang akan digunakan untuk AJAX POST karena mekanisme Cross-Site Request Forgery (CSRF) di Django secara default mencegah semua permintaan POST yang tidak menyertakan CSRF token yang valid. CSRF token adalah lapisan keamanan untuk melindungi aplikasi web dari serangan CSRF, di mana penyerang bisa memanfaatkan sesi pengguna untuk mengirimkan permintaan ber`bahaya tanpa sepengetahuan mereka.
+
+Namun, dalam beberapa kasus, seperti saat kita mengirim permintaan AJAX POST dari frontend JavaScript, kita mungkin tidak menyertakan CSRF token dengan benar, yang menyebabkan permintaan POST ditolak oleh Django dengan 403 Forbidden. Untuk mengatasi masalah ini, kita dapat menggunakan decorator @csrf_exempt di view terkait. Decorator ini menginstruksikan Django untuk tidak memeriksa CSRF token pada permintaan tersebut, sehingga permintaan AJAX POST bisa diproses meskipun tanpa token CSRF.
+
+#### 4. Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. 
+Pembersihan data tidak bisa dilakukan hanya di frontend karena alasan keamanan dan keandalan. Salah satu alasan utamanya adalah pengguna dapat dengan mudah menghindari pembersihan atau validasi yang dilakukan di frontend, misalnya dengan mematikan JavaScript atau memodifikasi permintaan yang dikirimkan ke server. Jika pembersihan hanya dilakukan di frontend, data berbahaya atau tidak valid bisa saja masuk ke sistem. Oleh karena itu, pembersihan data juga harus dilakukan di backend untuk memastikan bahwa semua data yang diterima server tetap aman, valid, dan tidak membahayakan aplikasi.    
+
+#### 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+- Pertama saya membuat script pada main.html untuk mengambil data dari fungsi show_json yang ada di views.py. Namun disini saya juga mengganti syntaxnya dari mengambil seluruh object product menjadi product yang hanya dibuat oleh user saja
+
+```python
+data = ProductEntry.objects.filter(user = request.user)
+```
+
+Dilanjutkan dengan membuat fungsi fetch pada main.html
+```python
+async function getProductEntries(){
+    return fetch("{% url 'main:show_json' %}").then((res) => res.json())
+}
+```
+
+- Kemudian saya membuat refreshProductEntries() untuk menampilkan data yang diambil dari fetch sebelumnya ke main.html. Namun sebelum itu saya memindahkan potongan kode sebelumnya yang bertugas untuk menampilkan data dari context show_main ke refreshProductEntries() (tentu dengan modifikasi sedikit).
+
+- Selanjutnya saya membuat bagian modal yang nantinya akan saya pakai di button Add Product by AJAX. Intinya disini saya membuat struktur HTML + CSS yang nantinya akan timbul jika suatu event terjadi. (Masih keadaan hidden).
+
+- Saya melanjutkan dengan membuat function untuk menampilkan modal ataupun menyembunyikan modal itu. 
+```javascript
+function showModal() {
+      const modal = document.getElementById('crudModal');
+      const modalContent = document.getElementById('crudModalContent');
+
+      modal.classList.remove('hidden'); 
+      setTimeout(() => {
+        modalContent.classList.remove('opacity-0', 'scale-95');
+        modalContent.classList.add('opacity-100', 'scale-100');
+      }, 50); 
+  }
+
+  function hideModal() {
+      const modal = document.getElementById('crudModal');
+      const modalContent = document.getElementById('crudModalContent');
+
+      modalContent.classList.remove('opacity-100', 'scale-100');
+      modalContent.classList.add('opacity-0', 'scale-95');
+
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150); 
+  }
+```
+
+- Diikuti dengan membuat button untuk menampilkan modal tersebut dengan onclick terhubung dengan showModal()
+```html
+<button data-modal-target="crudModal" data-modal-toggle="crudModal" class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 shadow-lg" onclick="showModal();">
+      Add Product by AJAX
+</button>
+```
+
+Listener ditempatkan pada masing masing button di modal
+
+```javascript
+document.getElementById("cancelButton").addEventListener("click", hideModal);
+document.getElementById("closeModalBtn").addEventListener("click", hideModal);
+document.getElementById("productEntryForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    addProductEntry();
+    hideModal();
+})
+```
+
+- Kemudian saya lengkapi dengan menambahkan fungsi view terkhusus untuke AJAX ini di views.py
+```python
+@csrf_exempt
+@require_POST
+def add_product_entry_ajax(request):
+    name = strip_tags(request.POST.get("name"))
+    price = request.POST.get("price")
+    description = strip_tags(request.POST.get("description"))
+    user = request.user
+
+    new_product = ProductEntry(
+        name = name,
+        price = price,
+        description = description,
+        user = user
+    )
+    new_product.save()
+    return HttpResponse(b"CREATED", status=201)
+```
+Dapat dilihat disini, saya menambahkan csrf agar dapat melakukan post secara langsung dan kemudian di bersihkan data yang masuk menggunakan strip_tags.
+
+Selanjutnya tinggal dilakukan roting di urls.py saja
+```python
+path('add-product-entry-ajax', add_product_entry_ajax, name='add_product_entry_ajax'),
+```
+
+Tidak lupa juga saya menambahkan DOM Purifier untuk membersihkan datanya di frontend.
+Dan saya menambahkan refreshProductEntries() pada script agar aplikasi yang dijalankan langsung dapat menampilkan datanya.
+
+
+</details>
