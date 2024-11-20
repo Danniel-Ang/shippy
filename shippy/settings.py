@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -27,7 +26,14 @@ SECRET_KEY = 'django-insecure-j!3-jzqpwvntx-aefvo$w%3c4peu$z5142dbjy=!$q=ugd)w0n
 PRODUCTION = os.getenv('PRODUCTION', False)
 DEBUG = not PRODUCTION
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "danniel-shippy.pbp.cs.ui.ac.id", "https://danniel-shippy.pbp.cs.ui.ac.id/", "http://danniel-shippy.pbp.cs.ui.ac.id/"] 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "danniel-shippy.pbp.cs.ui.ac.id", "https://danniel-shippy.pbp.cs.ui.ac.id/", "http://danniel-shippy.pbp.cs.ui.ac.id/", "10.0.2.2"] 
 
 # Application definition
 
@@ -39,6 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'authentication',
+    'corsheaders',
+    
 ]
 
 MIDDLEWARE = [
@@ -49,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # menambahkan middleware corsheaders
+    
 ]
 
 ROOT_URLCONF = 'shippy.urls'

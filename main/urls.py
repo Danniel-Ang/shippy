@@ -21,5 +21,9 @@ urlpatterns = [
     path('json/', show_json, name='show_json'),
     path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id'),
     path('json/<str:id>/', show_json_by_id, name='show_json_by_id'),
+    path('json_user', show_user_product, name='show_user_product'),
+    
+    # Flutter
+    path('create-flutter/', create_product_flutter, name='create_product_flutter'),
 ]
 

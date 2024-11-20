@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import ProductEntry
 from main.forms import ProductForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -109,6 +110,23 @@ def delete_product(request, id):
     product.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
 
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        new_prodcut = ProductEntry.objects.create(
+            user=request.user,
+            name = data["name"],
+            price = int(data["price"]),
+            description=data["description"]
+        )
+
+        new_prodcut.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
 
 # XML and JSON
 def show_xml_by_id(request, id):
@@ -120,9 +138,13 @@ def show_json_by_id(request, id):
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_json(request):
-    data = ProductEntry.objects.filter(user = request.user)
+    data = ProductEntry.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_xml(request):
-    data = ProductEntry.objects.filter(user = request.user)
+    data = ProductEntry.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+def show_user_product(request):
+    data = ProductEntry.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
